@@ -1,12 +1,23 @@
 <div class="second-chat-window text-center">
   <div class="display">
-    {{postedMesssage}}
+    {{displayMessage}}
   </div>
-  <textarea title="message" rows="10" cols="30"  #f></textarea>
+  <div class="text-center">
+    <textarea title="message" rows="10" cols="30"  #f></textarea>
+  </div>
   <div class="text-center">
     <button (click)="postAll(f)">Post</button>
     <button (click)="postFirst(f)">First</button>
     <button (click)="postThird(f)">Third</button>
-    <button (click)="readPrivate()">Read Private</button>
+    <button (click)="readMessages($event.target.value)">
+    <span *ngIf="!readPrivate; else readPublic">
+        Private ({{privateMessages.length}})
+      </span>
+      <ng-template #readPublic>
+        <span>
+        Read public
+      </span>
+      </ng-template>
+    </button>
   </div>
 </div>

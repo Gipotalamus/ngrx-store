@@ -10,24 +10,30 @@ import {Message} from "../message";
 })
 export class SecondWindowComponent implements OnInit {
 
-  postedMesssage: string = '';
-  privateMessages: string[] = [];
+  postedMessage: string = '';
+  privateMessages: Message[] = [];
+  displayMessage: string = '';
+  readPrivate: boolean = false;
 
   constructor(private store: Store<Message>) {
     this.store.select('publicMessage')
       .subscribe((msg: Message) => {
         if (msg.owner) {
           if (msg.owner === 'second') {
-            this.postedMesssage += 'I said: ' + msg.content + '\n';
+            this.postedMessage += 'I said: ' + msg.content + '\n';
           }
-          else this.postedMesssage +=  msg.owner + ': ' + msg.content + '\n';
+          else this.postedMessage +=  msg.owner + ' says: ' + msg.content + '\n';
+          this.displayMessage = this.postedMessage;
+          this.readPrivate = false;
         }
       });
+
     this.store.select('privateMessage')
       .subscribe((msg: Message) => {
         if (msg.owner) {
-          if (msg.owner !== 'second') {
-            this.privateMessages.push(msg.content);
+          if (msg.owner !== 'second' && msg.adresat === 'second') {
+            this.privateMessages.push(msg);
+
           }
         }
       });
@@ -42,13 +48,21 @@ export class SecondWindowComponent implements OnInit {
   }
 
   postFirst(element: HTMLTextAreaElement) {
-    this.store.dispatch({type: 'private', payload: {owner: 'second', content: element.value}});
+    this.store.dispatch({type: 'private', payload: {owner: 'second', adresat: 'first', content: element.value}});
     element.value = '';
   }
 
   postThird(element: HTMLTextAreaElement) {
-    this.store.dispatch({type: 'private', payload: {owner: 'second', content: element.value}});
+    this.store.dispatch({type: 'private', payload: {owner: 'second', adresat: 'third', content: element.value}});
     element.value = '';
   }
 
+  readMessages(message: Message) {
+    this.readPrivate = !this.readPrivate;
+    if (this.readPrivate) {
+      this.displayMessage = this.privateMessages.map((msg: Message) => msg.owner + ' says: ' + msg.content).join('\n');
+    } else {
+      this.displayMessage = this.postedMessage;
+    }
+  }
 }
