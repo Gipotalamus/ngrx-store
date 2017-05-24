@@ -12,9 +12,10 @@ import {Message} from "../message";
 export class FirstWindowComponent implements OnInit {
 
   postedMesssage: string = '';
+  privateMessages: string[] = [];
 
   constructor(private store: Store<Message>) {
-    this.store.select('message')
+    this.store.select('publicMessage')
       .subscribe((msg: Message) => {
         if (msg.owner) {
           if (msg.owner === 'first') {
@@ -23,14 +24,33 @@ export class FirstWindowComponent implements OnInit {
           else this.postedMesssage +=  msg.owner + ': ' + msg.content + '\n';
         }
       });
+
+    this.store.select('privateMessage')
+      .subscribe((msg: Message) => {
+      console.log(msg.owner)
+        if (msg.owner) {
+          if (msg.owner !== 'first') {
+            this.privateMessages.push(msg.content);
+          }
+        }
+      });
   }
 
   ngOnInit() {
   }
 
-  clickFirstButton(element: HTMLTextAreaElement) {
-    this.store.dispatch({type: 'post', payload: {owner: 'first', content: element.value}});
+  postAll(element: HTMLTextAreaElement) {
+    this.store.dispatch({type: 'public', payload: {owner: 'first', content: element.value}});
     element.value = '';
   }
 
+  postSecond(element: HTMLTextAreaElement) {
+    this.store.dispatch({type: 'private', payload: {owner: 'first', content: element.value}});
+    element.value = '';
+  }
+
+  postThird(element: HTMLTextAreaElement) {
+    this.store.dispatch({type: 'private', payload: {owner: 'first', content: element.value}});
+    element.value = '';
+  }
 }

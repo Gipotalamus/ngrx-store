@@ -13,9 +13,10 @@ import 'rxjs/add/operator/filter';
 export class ThirdWindowComponent implements OnInit {
 
   postedMesssage: string = '';
+  privateMessages: string[] = [];
 
   constructor(private store: Store<Message>) {
-    this.store.select('message')
+    this.store.select('publicMessage')
       .subscribe((msg: Message) => {
         if (msg.owner) {
           if (msg.owner === 'third') {
@@ -24,16 +25,34 @@ export class ThirdWindowComponent implements OnInit {
           else this.postedMesssage +=  msg.owner + ': ' + msg.content + '\n';
         }
         });
+
+    this.store.select('privateMessage')
+      .subscribe((msg: Message) => {
+        if (msg.owner) {
+          if (msg.owner !== 'third') {
+            this.privateMessages.push(msg.content);
+          }
+        }
+      });
   }
 
 
   ngOnInit() {
   }
 
-  clickThirdButton(element: HTMLTextAreaElement) {
-    this.store.dispatch({type: 'post', payload: {owner: 'third', content: element.value}});
+  postAll(element: HTMLTextAreaElement) {
+    this.store.dispatch({type: 'public', payload: {owner: 'third', content: element.value}});
     element.value = '';
   }
 
+  postFirst(element: HTMLTextAreaElement) {
+    this.store.dispatch({type: 'private', payload: {owner: 'third', content: element.value}});
+    element.value = '';
+  }
+
+  postSecond(element: HTMLTextAreaElement) {
+    this.store.dispatch({type: 'private', payload: {owner: 'third', content: element.value}});
+    element.value = '';
+  }
 }
 

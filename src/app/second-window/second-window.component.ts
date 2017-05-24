@@ -11,9 +11,10 @@ import {Message} from "../message";
 export class SecondWindowComponent implements OnInit {
 
   postedMesssage: string = '';
+  privateMessages: string[] = [];
 
   constructor(private store: Store<Message>) {
-    this.store.select('message')
+    this.store.select('publicMessage')
       .subscribe((msg: Message) => {
         if (msg.owner) {
           if (msg.owner === 'second') {
@@ -22,13 +23,31 @@ export class SecondWindowComponent implements OnInit {
           else this.postedMesssage +=  msg.owner + ': ' + msg.content + '\n';
         }
       });
+    this.store.select('privateMessage')
+      .subscribe((msg: Message) => {
+        if (msg.owner) {
+          if (msg.owner !== 'second') {
+            this.privateMessages.push(msg.content);
+          }
+        }
+      });
   }
 
   ngOnInit() {
   }
 
-  clickSecondButton(element: HTMLTextAreaElement) {
-    this.store.dispatch({type: 'post', payload: {owner: 'second', content: element.value}});
+  postAll(element: HTMLTextAreaElement) {
+    this.store.dispatch({type: 'public', payload: {owner: 'second', content: element.value}});
+    element.value = '';
+  }
+
+  postFirst(element: HTMLTextAreaElement) {
+    this.store.dispatch({type: 'private', payload: {owner: 'second', content: element.value}});
+    element.value = '';
+  }
+
+  postThird(element: HTMLTextAreaElement) {
+    this.store.dispatch({type: 'private', payload: {owner: 'second', content: element.value}});
     element.value = '';
   }
 

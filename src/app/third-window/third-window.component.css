@@ -1,9 +1,7 @@
-.third-chat-window {
-  display: inline-block;
-}
 .display {
   white-space: pre;
   border: 1px solid black;
   height: 300px;
-  width: 250px;
+  width: 100%;
+  margin: 5px 0;
 }

@@ -1,7 +1,12 @@
-<div class="first-chat-window">
+<div class="first-chat-window text-center">
   <div class="display">
     {{postedMesssage}}
   </div>
   <textarea title="message" rows="10" cols="30"  #f></textarea>
-  <button (click)="clickFirstButton(f)">Post</button>
+  <div class="text-center">
+    <button (click)="postAll(f)">Post</button>
+    <button (click)="postSecond(f)">Second</button>
+    <button (click)="postThird(f)">Third</button>
+    <button (click)="readPrivate()">Private ({{privateMessages.length}})</button>
+  </div>
 </div>

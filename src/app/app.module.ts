@@ -5,7 +5,7 @@ import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
 import {StoreModule} from '@ngrx/store';
-import {reducer} from './reducers';
+import {privateReducer, publicReducer} from './reducers';
 import {StoreDevtoolsModule} from '@ngrx/store-devtools';
 import { FirstWindowComponent } from './first-window/first-window.component';
 import { SecondWindowComponent } from './second-window/second-window.component';
@@ -22,7 +22,7 @@ import { ThirdWindowComponent } from './third-window/third-window.component';
     BrowserModule,
     FormsModule,
     HttpModule,
-    StoreModule.provideStore({message: reducer}),
+    StoreModule.provideStore({publicMessage: publicReducer, privateMessage: privateReducer}),
       StoreDevtoolsModule.instrumentOnlyWithExtension({
         maxAge: 5
       })],
