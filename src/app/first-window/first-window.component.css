@@ -1,0 +1,9 @@
+.first-chat-window {
+  display: inline-block;
+}
+.display {
+  white-space: pre;
+  border: 1px solid black;
+  height: 300px;
+  width: 250px;
+}
